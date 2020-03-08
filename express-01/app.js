@@ -9,9 +9,13 @@ app.get('/api/usuarios', (req, res) => {
     res.send(['Luis', 'Maria', 'Franco']);
 });
 
-app.listen(3000, () => {
-    console.log('Escuchando en el puerto 3000...');
+const port = process.env.PORT || 3000;
+
+app.listen(port, () => {
+    console.log(`Escuchando en el puerto ${port}...`);
 });
+
+
 
 
 
