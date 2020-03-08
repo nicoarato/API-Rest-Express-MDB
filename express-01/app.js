@@ -29,6 +29,11 @@ app.get('/api/usuarios/:id', (req, res) => {
 
 app.post('/api/usuarios', (req, res) => {
 
+    if (!req.body.nombre || req.body.nombre.length <= 2) {
+        res.status(400).send('Debe ingresar un nombre, de al menos 3 letras.');
+        return;
+    }
+
     const usuario = {
         id: usuarios.length + 1,
         nombre: req.body.nombre
