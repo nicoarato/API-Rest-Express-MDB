@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
 
+app.use(express.json()); //middleware
+
 const usuarios = [
     { id: 1, nombre: 'Luis' }, { id: 2, nombre: 'Maria' }, { id: 3, nombre: 'Ana' }
 ];
@@ -24,6 +26,17 @@ app.get('/api/usuarios/:id', (req, res) => {
     }
 });
 
+
+app.post('/api/usuarios', (req, res) => {
+
+    const usuario = {
+        id: usuarios.length + 1,
+        nombre: req.body.nombre
+    };
+
+    usuarios.push(usuario);
+    res.send(usuario);
+});
 
 
 
