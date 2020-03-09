@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const Joi = require('@hapi/joi');
 
 app.use(express.json()); //middleware
 
@@ -29,18 +30,40 @@ app.get('/api/usuarios/:id', (req, res) => {
 
 app.post('/api/usuarios', (req, res) => {
 
-    if (!req.body.nombre || req.body.nombre.length <= 2) {
-        res.status(400).send('Debe ingresar un nombre, de al menos 3 letras.');
-        return;
+
+    const schema = Joi.object({
+        nombre: Joi.string()
+            .min(3)
+            .required()
+    });
+
+    const { error, value } = schema.validate({ nombre: req.body.nombre });
+
+    if (!error) {
+        const usuario = {
+            id: usuarios.length + 1,
+            nombre: value.nombre
+        };
+
+        usuarios.push(usuario);
+        res.send(usuario);
+    } else {
+        const mensaje = error.details[0].message;
+        res.status(400).send(mensaje);
     }
 
-    const usuario = {
-        id: usuarios.length + 1,
-        nombre: req.body.nombre
-    };
+    /*     if (!req.body.nombre || req.body.nombre.length <= 2) {
+            res.status(400).send('Debe ingresar un nombre, de al menos 3 letras.');
+            return;
+        }
 
-    usuarios.push(usuario);
-    res.send(usuario);
+        const usuario = {
+            id: usuarios.length + 1,
+            nombre: req.body.nombre
+        };
+
+        usuarios.push(usuario);
+        res.send(usuario); */
 });
 
 
