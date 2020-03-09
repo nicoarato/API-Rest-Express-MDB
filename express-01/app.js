@@ -1,8 +1,20 @@
 const express = require('express');
+const logger = require('./logger');
 const app = express();
 const Joi = require('@hapi/joi');
 
 app.use(express.json()); //middleware
+
+app.use(express.urlencoded({ extended: true }));
+
+app.use(logger);
+
+app.use(function(req, res, next) {
+    console.log('Autenticando...');
+    next();
+});
+
+
 
 const usuarios = [
     { id: 1, nombre: 'Luis' }, { id: 2, nombre: 'Maria' }, { id: 3, nombre: 'Ana' }
