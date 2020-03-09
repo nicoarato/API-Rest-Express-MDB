@@ -51,21 +51,34 @@ app.post('/api/usuarios', (req, res) => {
         const mensaje = error.details[0].message;
         res.status(400).send(mensaje);
     }
-
-    /*     if (!req.body.nombre || req.body.nombre.length <= 2) {
-            res.status(400).send('Debe ingresar un nombre, de al menos 3 letras.');
-            return;
-        }
-
-        const usuario = {
-            id: usuarios.length + 1,
-            nombre: req.body.nombre
-        };
-
-        usuarios.push(usuario);
-        res.send(usuario); */
 });
 
+
+app.put('/api/usuarios/:id', (req, res) => {
+
+    //encontrar si existe el usuario.
+    let usuario = usuarios.find(u => u.id === parseInt(req.params.id))
+
+    if (!usuario) res.status(404).send('El usuario no fue encontrado.');
+
+    const schema = Joi.object({
+        nombre: Joi.string()
+            .min(3)
+            .required()
+    });
+
+    const { error, value } = schema.validate({ nombre: req.body.nombre });
+
+    if (error) {
+        const mensaje = error.details[0].message;
+        res.status(400).send(mensaje);
+        return;
+    }
+
+    usuario.nombre = value.nombre;
+    res.send(usuario);
+
+});
 
 
 const port = process.env.PORT || 3000;
