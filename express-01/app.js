@@ -1,5 +1,6 @@
 const express = require('express');
-const logger = require('./logger');
+//const logger = require('./logger');
+const morgan = require('morgan');
 const app = express();
 const Joi = require('@hapi/joi');
 
@@ -8,7 +9,12 @@ app.use(express.json()); //middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-app.use(logger);
+//app.use(logger);
+
+//Uso de middleware de 3ros
+
+app.use(morgan('tiny'));
+console.log('Morgan habilitado.');
 
 app.use(function(req, res, next) {
     console.log('Autenticando...');
