@@ -1,4 +1,5 @@
 const express = require('express');
+const config = require('config');
 //const logger = require('./logger');
 const morgan = require('morgan');
 const app = express();
@@ -8,6 +9,10 @@ app.use(express.json()); //middleware
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
+
+//Configuracion de entornos
+console.log('Aplicacion: ' + config.get('nombre'));
+console.log('Base de datos server: ' + config.get('configDB.host'));
 
 //app.use(logger);
 
