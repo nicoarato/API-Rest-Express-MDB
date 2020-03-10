@@ -6,6 +6,7 @@ const Joi = require('@hapi/joi');
 app.use(express.json()); //middleware
 
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public'));
 
 app.use(logger);
 
