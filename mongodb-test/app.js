@@ -52,10 +52,22 @@ async function listarCursos() {
 
     const cursos = await Curso
         //.find({ publicado: true })
-        .find({ publicado: true })
+
+    //.find({ precio: {$gte:10, $lte:30} })
+    //.find({ precio: {$in: [10, 15, 25]} })
+
+    //.find()
+    //.or([{ autor: 'Lucía' }, { publicado: false }])
+    //.and([{ autor: 'Lucía' }, { publicado: false }])
+
+    //.find({ autor: /^L/ })  //comienza con un patron
+
+    //.find({ autor: /a$/ }) //termina con patron
+
+        .find({ autor: /.*at.*/ }) //contiene un patron
         .limit(10)
         .sort({ autor: -1 })
-        .select({ nombre: 1, etiquetas: 1 });
+        .select({ autor: 1, nombre: 1, etiquetas: 1 });
 
 
     console.log(cursos);
