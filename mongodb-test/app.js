@@ -99,15 +99,28 @@ async function actualizarCurso(id) {
     /* const resultado = await curso.save();
      console.log('Curso actualizado', resultado); */
 
-    const resultado = await Curso.update({ _id: id }, {
+    //const resultado = await Curso.update({ _id: id }, {
+
+    //Muestra el resultado antes de actualizar,
+    //si queres el resultado actualizado, usar new
+    const resultado = await Curso.findByIdAndUpdate({ _id: id }, {
         $set: {
-            autor: 'Luisito lemn',
+            autor: 'Mario perlondo',
             publicado: false
         }
-    });
+    }, { new: true });
     console.log(resultado);
 
 
 }
 
-actualizarCurso('5e6958fe65143918b0ec2bba');
+//actualizarCurso('5e6958fe65143918b0ec2bba');
+
+
+async function eliminarDocumento(id) {
+    const resultado = await Curso.findByIdAndDelete({ _id: id });
+    console.log(resultado);
+
+}
+
+eliminarDocumento('5e6958fe65143918b0ec2bba');
