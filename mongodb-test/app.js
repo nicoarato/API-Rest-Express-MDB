@@ -49,7 +49,10 @@ async function crearCurso() {
  */
 
 async function listarCursos() {
+    const numPage = 2;
+    const sizePage = 10;
 
+    //api/cursos?numPage=4&sizePage=10
     const cursos = await Curso
         //.find({ publicado: true })
 
@@ -64,7 +67,10 @@ async function listarCursos() {
 
     //.find({ autor: /a$/ }) //termina con patron
 
+
+
         .find({ autor: /.*at.*/ }) //contiene un patron
+        .skip((numPage - 1) * sizePage)
         .limit(10)
         .sort({ autor: -1 })
         .select({ autor: 1, nombre: 1, etiquetas: 1 });
