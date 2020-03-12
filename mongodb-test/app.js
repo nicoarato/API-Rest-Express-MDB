@@ -79,4 +79,35 @@ async function listarCursos() {
     console.log(cursos);
 }
 
-listarCursos();
+//listarCursos();
+
+async function actualizarCurso(id) {
+
+    /*     const curso = await Curso.findById(id);
+
+        if (!curso) {
+            console.log('El curso no existe');
+            return;
+        }
+
+        curso.publicado = false;
+        curso.autor = "Gustavo Grega";
+        /*    curso.set({
+               publicado: false,
+               autor: 'Gustavo Alfano'
+           }) */
+    /* const resultado = await curso.save();
+     console.log('Curso actualizado', resultado); */
+
+    const resultado = await Curso.update({ _id: id }, {
+        $set: {
+            autor: 'Luisito lemn',
+            publicado: false
+        }
+    });
+    console.log(resultado);
+
+
+}
+
+actualizarCurso('5e6958fe65143918b0ec2bba');
