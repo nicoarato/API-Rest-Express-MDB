@@ -4,7 +4,16 @@ const Usuario = require('../models/usuario_model');
 
 
 ruta.get('/', (req, res) => {
-    res.json('Listo el Get de usuarios');
+    //res.json('Listo el Get de usuarios');
+
+    let resultado = listarUsuariosActivos();
+    resultado.then(usuarios => {
+        res.json(usuarios)
+    }).catch(err => {
+        res.status(400).json({
+            error: res
+        })
+    })
 });
 
 
@@ -66,6 +75,11 @@ async function crearUsuario(body) {
     });
     return await usuario.save();
 
+}
+
+async function listarUsuariosActivos() {
+    let usuarios = await Usuario.find({ "estado": true });
+    return usuarios;
 }
 
 
