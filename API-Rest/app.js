@@ -1,4 +1,5 @@
 const usuarios = require('./routes/usuarios');
+const cursos = require('./routes/cursos');
 const express = require('express');
 const mongoose = require('mongoose');
 
@@ -10,8 +11,9 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/api', usuarios);
+/* app.use('/api', usuarios); */
 app.use('/api/usuarios', usuarios);
+app.use('/api/cursos', cursos);
 
 //app.use('/api/cursos', cursos);
 
