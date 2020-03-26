@@ -27,15 +27,29 @@ ruta.put('/:id', (req, res) => {
     resultado.then(curso => {
         res.json({
             curso: curso
-        }).catch(err => {
-            res.status(400).json({
-                error: err
-            })
+        })
+
+    }).catch(err => {
+        res.status(400).json({
+            error: err
         })
     })
 })
 
 
+ruta.delete('/:id', (req, res) => {
+    let resultado = desactivarCurso(req.params.id);
+    resultado.then(curso => {
+        res.json({
+            curso: curso
+        })
+
+    }).catch(err => {
+        res.status(400).json({
+            error: err
+        })
+    })
+})
 
 
 async function crearCurso(body) {
@@ -54,6 +68,16 @@ async function actualizarCurso(id, body) {
         $set: {
             titulo: body.titulo,
             descripcion: body.descripcion
+        }
+    }, { new: true });
+    return curso;
+}
+
+async function desactivarCurso(id) {
+
+    let curso = await Curso.findByIdAndUpdate(id, {
+        $set: {
+            estado: false
         }
     }, { new: true });
     return curso;
