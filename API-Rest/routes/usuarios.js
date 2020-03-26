@@ -44,7 +44,10 @@ ruta.post('/', (req, res) => {
         let resultado = crearUsuario(body);
 
         resultado.then(user => {
-            res.json({ valor: user })
+            res.json({
+                nombre: user.nombre,
+                email: user.email
+            })
 
         }).catch(err => {
             res.status(400).json({
@@ -70,7 +73,8 @@ ruta.put('/:email', (req, res) => {
         let resultado = actualizarUsuario(req.params.email, req.body);
         resultado.then(valor => {
             res.json({
-                valor: valor
+                nombre: valor.nombre,
+                email: valor.email
 
             })
         }).catch(err => {
@@ -92,7 +96,8 @@ ruta.delete('/:email', (req, res) => {
     let resultado = desactivarUsuario(req.params.email);
     resultado.then(valor => {
         res.json({
-            usuario: valor
+            nombre: valor.nombre,
+            email: valor.email
         })
     }).catch(err => {
         res.status(400).json({
@@ -116,7 +121,8 @@ async function crearUsuario(body) {
 }
 
 async function listarUsuariosActivos() {
-    let usuarios = await Usuario.find({ "estado": true });
+    let usuarios = await Usuario.find({ "estado": true })
+        .select({ nombre: 1, email: 1 });
     return usuarios;
 }
 

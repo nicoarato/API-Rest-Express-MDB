@@ -4,7 +4,13 @@ const ruta = express.Router();
 
 ruta.get('/', (req, res) => {
 
-    res.json('Listo el Get de cursos.');
+    let resultado = listarCursosActivos();
+    resultado.then(cursos => {
+        res.json(cursos);
+    }).catch(err => {
+        res.status(400).json(err);
+    })
+
 });
 
 ruta.post('/', (req, res) => {
@@ -61,6 +67,11 @@ async function crearCurso(body) {
     });
     return await curso.save();
 
+}
+
+async function listarCursosActivos() {
+    let cursos = await Curso.find({ "estado": true });
+    return cursos;
 }
 
 async function actualizarCurso(id, body) {
