@@ -1,6 +1,22 @@
 const express = require('express');
 const ruta = express.Router();
 const Usuario = require('../models/usuario_model');
+const Joi = require('@hapi/joi');
+
+
+const schema = Joi.object({
+    nombre: Joi.string()
+        .min(3)
+        .max(10)
+        .required(),
+
+    password: Joi.string()
+        .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')),
+
+    email: Joi.string()
+        .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
+});
+
 
 
 ruta.get('/', (req, res) => {
@@ -20,32 +36,54 @@ ruta.get('/', (req, res) => {
 
 ruta.post('/', (req, res) => {
     let body = req.body;
-    let resultado = crearUsuario(body);
 
-    resultado.then(user => {
-        res.json({ valor: user })
+    const { error, value } = schema.validate({ nombre: body.nombre, email: body.email });
 
-    }).catch(err => {
+    if (!error) {
+
+        let resultado = crearUsuario(body);
+
+        resultado.then(user => {
+            res.json({ valor: user })
+
+        }).catch(err => {
+            res.status(400).json({
+                error: err
+            })
+        });
+
+    } else {
         res.status(400).json({
-            error: err
+            error: error
         })
-    });
+    }
+
+
 });
 
 
 ruta.put('/:email', (req, res) => {
 
-    let resultado = actualizarUsuario(req.params.email, req.body);
-    resultado.then(valor => {
-        res.json({
-            valor: valor
+    const { error, value } = schema.validate({ nombre: req.body.nombre });
 
-        })
-    }).catch(err => {
+    if (!error) {
+        let resultado = actualizarUsuario(req.params.email, req.body);
+        resultado.then(valor => {
+            res.json({
+                valor: valor
+
+            })
+        }).catch(err => {
+            res.status(400).json({
+                error: err
+            })
+        });
+    } else {
         res.status(400).json({
-            error: err
+            error: error
         })
-    })
+    }
+
 
 });
 
@@ -84,7 +122,7 @@ async function listarUsuariosActivos() {
 
 
 async function actualizarUsuario(email, body) {
-    let usuario = await Usuario.findOneAndUpdate(email, {
+    let usuario = await Usuario.findOneAndUpdate({ "email": email }, {
         $set: {
             nombre: body.nombre,
             password: body.password
