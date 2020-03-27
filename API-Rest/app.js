@@ -9,6 +9,8 @@ mongoose.connect(config.get('configDB.HOST'), { useNewUrlParser: true, useUnifie
     .then(() => console.log('Conectado a MongoDB'))
     .catch(err => { console.log('No se pudo conectar...'), err });
 
+mongoose.set('useCreateIndex', true);
+
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
