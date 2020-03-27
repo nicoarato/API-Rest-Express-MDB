@@ -5,6 +5,7 @@ const ruta = express.Router();
 const Usuario = require('../models/usuario_model');
 const Joi = require('@hapi/joi');
 const bcrypt = require('bcrypt');
+const verificarToken = require('../middlewares/auth');
 
 
 const schema = Joi.object({
@@ -21,18 +22,7 @@ const schema = Joi.object({
 });
 
 
-let verificarToken = (req, res, next) => {
-    let token = req.get('Autorization');
-    jwt.verify(token, config.get('configToken.SEED'), (err, decoded) => {
-        if (err) {
-            return res.status(401).json({
-                err
-            })
-        }
-        req.usuario = decoded.usuario;
-        next();
-    })
-}
+
 
 
 ruta.get('/', verificarToken, (req, res) => {
@@ -94,7 +84,7 @@ ruta.post('/', (req, res) => {
 });
 
 
-ruta.put('/:email', (req, res) => {
+ruta.put('/:email', verificarToken, (req, res) => {
 
     const { error, value } = schema.validate({ nombre: req.body.nombre });
 
@@ -121,7 +111,7 @@ ruta.put('/:email', (req, res) => {
 });
 
 
-ruta.delete('/:email', (req, res) => {
+ruta.delete('/:email', verificarToken, (req, res) => {
     let resultado = desactivarUsuario(req.params.email);
     resultado.then(valor => {
         res.json({
