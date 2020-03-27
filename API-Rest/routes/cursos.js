@@ -5,14 +5,17 @@ const verificarToken = require('../middlewares/auth');
 
 ruta.get('/', verificarToken, (req, res) => {
 
-    let resultado = listarCursosActivos();
-    resultado.then(cursos => {
-        res.json(cursos);
-    }).catch(err => {
-        res.status(400).json(err);
+    res.json({
+        usuario: req.usuario
     })
 
-});
+
+    let resultado = listarCursosActivos();
+    resultado.then(cursos => { res.json(cursos); })
+        .catch(err => { res.status(400).json(err) });
+
+})
+
 
 ruta.post('/', verificarToken, (req, res) => {
     let resultado = crearCurso(req.body);

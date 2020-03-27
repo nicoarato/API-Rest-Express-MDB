@@ -18,7 +18,7 @@ ruta.post('/', (req, res) => {
                     })
                 }
                 const jwToken = jwt.sign({
-                    data: { _id: datos.id, nombre: datos.nombre, email: datos.email }
+                    usuario: { _id: datos._id, nombre: datos.nombre, email: datos.email }
                 }, config.get('configToken.SEED'), { expiresIn: config.get('configToken.expiration') });
                 res.json({
                         usuario: {
@@ -40,7 +40,7 @@ ruta.post('/', (req, res) => {
         })
         .catch(err => {
             res.status(400).json({
-                erro: 'Error en el servicio. ' + err
+                error: 'Error en el servicio. ' + err
             })
         })
 })

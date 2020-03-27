@@ -10,8 +10,8 @@ let verificarToken = (req, res, next) => {
             })
         }
         req.usuario = decoded.usuario;
-        next();
-    })
+        next()
+    });
 }
 
 module.exports = verificarToken;
