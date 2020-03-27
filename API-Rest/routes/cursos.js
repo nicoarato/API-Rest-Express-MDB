@@ -5,11 +5,6 @@ const verificarToken = require('../middlewares/auth');
 
 ruta.get('/', verificarToken, (req, res) => {
 
-    res.json({
-        usuario: req.usuario
-    })
-
-
     let resultado = listarCursosActivos();
     resultado.then(cursos => { res.json(cursos); })
         .catch(err => { res.status(400).json(err) });
@@ -18,7 +13,9 @@ ruta.get('/', verificarToken, (req, res) => {
 
 
 ruta.post('/', verificarToken, (req, res) => {
-    let resultado = crearCurso(req.body);
+
+
+    let resultado = crearCurso(req);
 
     resultado.then(curso => {
         res.json({
@@ -62,11 +59,12 @@ ruta.delete('/:id', verificarToken, (req, res) => {
 })
 
 
-async function crearCurso(body) {
+async function crearCurso(req) {
 
     let curso = new Curso({
-        titulo: body.titulo,
-        descripcion: body.descripcion
+        titulo: req.body.titulo,
+        autor: req.usuario._id,
+        descripcion: req.body.descripcion
 
     });
     return await curso.save();
@@ -74,7 +72,8 @@ async function crearCurso(body) {
 }
 
 async function listarCursosActivos() {
-    let cursos = await Curso.find({ "estado": true });
+    let cursos = await Curso.find({ "estado": true })
+        .populate('autor', 'nombre -_id');
     return cursos;
 }
 
