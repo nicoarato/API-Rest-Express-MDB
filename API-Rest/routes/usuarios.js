@@ -2,6 +2,7 @@ const express = require('express');
 const ruta = express.Router();
 const Usuario = require('../models/usuario_model');
 const Joi = require('@hapi/joi');
+const bcrypt = require('bcrypt');
 
 
 const schema = Joi.object({
@@ -126,7 +127,7 @@ async function crearUsuario(body) {
     let usuario = new Usuario({
         email: body.email,
         nombre: body.nombre,
-        password: body.password
+        password: bcrypt.hashSync(body.password, 10)
 
     });
     return await usuario.save();
