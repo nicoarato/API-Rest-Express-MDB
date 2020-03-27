@@ -1,4 +1,6 @@
 const express = require('express');
+const jwt = require('jsonwebtoken');
+const config = require('config');
 const ruta = express.Router();
 const Usuario = require('../models/usuario_model');
 const Joi = require('@hapi/joi');
@@ -19,8 +21,21 @@ const schema = Joi.object({
 });
 
 
+let verificarToken = (req, res, next) => {
+    let token = req.get('Autorization');
+    jwt.verify(token, config.get('configToken.SEED'), (err, decoded) => {
+        if (err) {
+            return res.status(401).json({
+                err
+            })
+        }
+        req.usuario = decoded.usuario;
+        next();
+    })
+}
 
-ruta.get('/', (req, res) => {
+
+ruta.get('/', verificarToken, (req, res) => {
     //res.json('Listo el Get de usuarios');
 
     let resultado = listarUsuariosActivos();
